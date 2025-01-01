@@ -90,40 +90,41 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    if source == target:
+        return []
 
+    def build_solution(node):
+        solutionChain = [node.action]
+        while node.parent.action is not None:
+            solutionChain.insert(0, node.parent.action)
+            node = node.parent
+        return solutionChain
+    
     frontier = QueueFrontier()
+
+    def add_neighbors_to_the_frontier(neighbors, explored, depth):
+        for neighbor in neighbors:
+            if (neighbor[1] not in explored):
+                frontier.add(Node(state=neighbor[1], parent=node, action=neighbor))
+        else:
+            print('neighbor already explored:', neighbor[1], 'parent:', source, 'action', neighbor)
+        if len(explored) == depth:
+            print('Explored too much', explored)
+            return None
+        
     explored = set()
     sourceNode = Node(source, None, None)
 
-    print('Add sourceNode', source , 'to the frontier.')
     frontier.add(sourceNode)
-
+    
     while not frontier.empty():
         node = frontier.remove()
-        print('Explore', node.state ,'now.')
-
-        ### Check target and build Solution:
         if node.state == target:
-            solutionChain = [node.action]
-            print('solution found:', node.state, 'From:', node.action)
-            ### build solution
-            while node.parent.action is not None:
-                print('Parent:', node.parent, 'From:', node.action)
-                solutionChain.insert(0, node.parent.action)
-                node = node.parent
-            return solutionChain
+            return build_solution(node)
         
         explored.add(node.state)
 
-        ### Add neighbors to the frontier:
-        for neighbor in neighbors_for_person(node.state):
-            if (neighbor[1] not in explored):
-                frontier.add(Node(state=neighbor[1], parent=node, action=neighbor))
-            else:
-                print('neighbor already explored:', neighbor[1], 'parent:', source, 'action', neighbor)
-        if len(explored) == len(people) - 1:
-            print('Explored too much', explored)
-            return None
+        add_neighbors_to_the_frontier(neighbors_for_person(node.state), explored, len(people) - 1)
 
 def person_id_for_name(name):
     """
