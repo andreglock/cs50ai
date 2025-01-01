@@ -83,6 +83,7 @@ def main():
             movie = movies[path[i + 1][0]]["title"]
             print(f"{i + 1}: {person1} and {person2} starred in {movie}")
 
+
 def shortest_path(source, target):
     """
     Returns the shortest list of (movie_id, person_id) pairs
@@ -125,6 +126,7 @@ def shortest_path(source, target):
         explored.add(node.state)
 
         add_neighbors_to_the_frontier(neighbors_for_person(node.state), explored, len(people) - 1)
+
 
 def person_id_for_name(name):
     """
