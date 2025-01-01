@@ -47,7 +47,9 @@ def result(board, action):
     """
     row = action[0]
     column = action[1]
-
+    if row > 2 or row < 0 or column > 2 or column < 0: 
+        raise 'Invalid Move'
+    
     newBoard = deepcopy(board)
 
     if board[row][column] == EMPTY:
@@ -106,8 +108,7 @@ def terminal(board):
     """
     if winner(board): 
         return True
-    isTerminal = moves_made(board) == 9
-    return isTerminal
+    return moves_made(board) == 9
 
 
 def utility(board):
@@ -128,6 +129,8 @@ def minimax(board):
     if moves_made(board) == 0:
         return (1, 1)
     if moves_made(board) == 9:
+        return None
+    if winner(board):
         return None
     else:
         return find_best(board)
